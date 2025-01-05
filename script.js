@@ -1,38 +1,50 @@
-const wrapper = document.querySelector(".wrapper"),
-  carousel = document.querySelector(".carousel"),
-  images = document.querySelectorAll("img"),
-  buttons = document.querySelectorAll(".button");
+import confetti from "https://cdn.skypack.dev/canvas-confetti";
+const yesButton = document.getElementById("yesButton");
+const noButton = document.getElementById("noButton");
+const imageDisplay = document.getElementById("imageDisplay");
+const valentineQuestion = document.getElementById("valentineQuestion");
+const responseButtons = document.getElementById("responseButtons");
 
-let imageIndex = 1,
-  intervalId;
+let noClickCount = 0;
+let buttonHeight = 48;
+let buttonWidth = 80;
+let fontSize = 20;
+const imagePaths = [
+  "/image1.gif",
+  "/image2.gif",
+  "/image3.gif",
+  "/image4.gif",
+  "/image5.gif",
+  "/image6.gif",
+  "/image7.gif",
+];
 
-const autoSlide = () => {
-  intervalId = setInterval(() => slideImage(++imageIndex), 2000);
-};
+noButton.addEventListener("click", function () {
+  if (noClickCount < 5) {
+    noClickCount++;
+    imageDisplay.src = imagePaths[noClickCount];
+    buttonHeight += 35;
+    buttonWidth += 35;
+    fontSize += 25;
+    yesButton.style.height = `${buttonHeight}px`;
+    yesButton.style.width = `${buttonWidth}px`;
+    yesButton.style.fontSize = `${fontSize}px`;
+    if (noClickCount < 6) {
+      noButton.textContent = [
+        "No",
+        "Are you sure?",
+        "Pookie please",
+        "Don't do this to me :(",
+        "You're breaking my heart",
+        "I'm gonna cry...",
+      ][noClickCount];
+    }
+  }
+});
 
-autoSlide();
-
-const slideImage = () => {
-  imageIndex =
-    imageIndex === images.length
-      ? 0
-      : imageIndex < 0
-      ? images.length - 1
-      : imageIndex;
-
-  carousel.style.transform = `translate(-${imageIndex * 100}%)`;
-};
-
-const updateClick = (e) => {
-  clearInterval(intervalId);
-
-  imageIndex += e.target.id === "next" ? 1 : -1;
-  slideImage(imageIndex);
-
-  autoSlide();
-};
-
-buttons.forEach((button) => button.addEventListener("click", updateClick));
-
-wrapper.addEventListener("mouseover", () => clearInterval(intervalId));
-wrapper.addEventListener("mouseleave", autoSlide);
+yesButton.addEventListener("click", () => {
+  imageDisplay.src = "/image7.gif";
+  valentineQuestion.textContent = "I love you so much";
+  responseButtons.style.display = "none";
+  confetti();
+});
